@@ -1,0 +1,55 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <form action="/login" method="POST" id="login-form">
+    <div>
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="text" id="password" name="password" required />
+    </div>
+    <button type="submit" id="login-btn">Log in</button>
+  </form>
+</Layout>
+
+<style>
+  form {
+    padding-top: 30vh;
+    margin: auto;
+    text-align: center;
+  }
+</style>
+
+<script>
+  const loginButton = document.querySelector("#login-btn") as HTMLButtonElement;
+  const loginForm = document.querySelector("#login-form") as HTMLFormElement;
+  const usernameInput = loginForm.querySelector(
+    'input[name="username"]',
+  ) as HTMLInputElement;
+  const passwordInput = loginForm.querySelector(
+    'input[name="password"]',
+  ) as HTMLInputElement;
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const res = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: usernameInput.value,
+        password: passwordInput.value,
+      }),
+    });
+    if (!res.ok) {
+      window.location.href = "/login";
+      return;
+    }
+    window.location.href = "/profile";
+  });
+</script>
